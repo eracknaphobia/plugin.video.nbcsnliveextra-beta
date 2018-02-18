@@ -144,7 +144,6 @@ def set_stream_quality(url):
 
     xbmc.log(str(master))
 
-
     cookies = ''
     for cookie in r.cookies:
         if cookies != '':
@@ -268,30 +267,38 @@ def add_link(name, url, title, iconimage, fanart, info=None):
     return ok
 
 
-def add_free_link(name, link_url, iconimage, fanart=None, info=None):
+def add_free_link(name, link_url, iconimage, fanart=None, info=None, stream_info=None):
     ok = True
     u = sys.argv[0]+"?url="+urllib.quote_plus(link_url)+"&mode=6&icon_image="+urllib.quote_plus(iconimage)
     liz=xbmcgui.ListItem(name, iconImage=ICON, thumbnailImage=iconimage)
     liz.setProperty("IsPlayable", "true")
-    liz.setInfo( type="Video", infoLabels={ "Title": name } )
+    liz.setInfo(type="Video", infoLabels={"Title": name})
     if info is not None:
         liz.setInfo( type="Video", infoLabels=info)
-
+    if stream_info is not None:
+        stream_values = ''
+        for key, value in stream_info.iteritems():
+            stream_values += '&' + urllib.quote_plus(key) + '=' + urllib.quote_plus(value)
+        u += stream_values
     liz.setProperty('fanart_image', fanart)
     ok=xbmcplugin.addDirectoryItem(handle=ADDON_HANDLE,url=u,listitem=liz)
     xbmcplugin.setContent(ADDON_HANDLE, 'episodes')
     return ok
 
 
-def add_premium_link(name, link_url, iconimage, requestor_id, fanart=None, info=None):
+def add_premium_link(name, link_url, iconimage, fanart=None, info=None, stream_info=None):
     ok = True
-    u=sys.argv[0]+"?url="+urllib.quote_plus(link_url)+"&mode=5&icon_image="+urllib.quote_plus(iconimage)+"&requestor_id="+urllib.quote_plus(requestor_id)
+    u=sys.argv[0]+"?url="+urllib.quote_plus(link_url)+"&mode=5&icon_image="+urllib.quote_plus(iconimage)
     liz=xbmcgui.ListItem(name, iconImage=ICON, thumbnailImage=iconimage)
     liz.setProperty("IsPlayable", "true")
-    liz.setInfo( type="Video", infoLabels={ "Title": name } )
+    liz.setInfo(type="Video", infoLabels={"Title": name})
     if info is not None:
-        liz.setInfo( type="Video", infoLabels=info)
-
+        liz.setInfo(type="Video", infoLabels=info)
+    if stream_info is not None:
+        stream_values = ''
+        for key, value in stream_info.iteritems():
+            stream_values += '&' + urllib.quote_plus(key) + '=' + urllib.quote_plus(value)
+        u += stream_values
     liz.setProperty('fanart_image', fanart)
     ok=xbmcplugin.addDirectoryItem(handle=ADDON_HANDLE,url=u,listitem=liz)
     xbmcplugin.setContent(ADDON_HANDLE, 'episodes')
