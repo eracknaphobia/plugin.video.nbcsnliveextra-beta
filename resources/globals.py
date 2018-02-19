@@ -83,11 +83,11 @@ FREE_UPCOMING = 'FFCC66FF'
 VERIFY = False
 # Add-on specific Adobepass variables
 SERVICE_VARS = {
-    'public_key':'nTWqX10Zj8H0q34OHAmCvbRABjpBk06w',
-    'private_key':'Q0CAFe5TSCeEU86t',
-    'registration_url':'activate.nbcsports.com',
+    'public_key': 'nTWqX10Zj8H0q34OHAmCvbRABjpBk06w',
+    'private_key': 'Q0CAFe5TSCeEU86t',
+    'registration_url': 'http://nbcsports.com/activate',
     'requestor_id': 'nbcsports',
-    'resource_id':urllib.quote('<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title>NBCOlympics</title><item><title>NBC Sports PGA Event</title><guid>123456789</guid><media:rating scheme="urn:vchip">TV-PG</media:rating></item></channel></rss>')
+    'resource_id': urllib.quote("<rss version='2.0'><channel><title>nbcsports</title></channel></rss>")
 }
 
 
@@ -100,38 +100,10 @@ def stringToDate(string, date_format):
     return date
 
 
-def get_resource_id():
-    #########################
-    # Get resource_id
-    #########################
-    """
-    GET http://stream.nbcsports.com/data/mobile/passnbc.xml HTTP/1.1
-    Host: stream.nbcsports.com
-    Connection: keep-alive
-    Accept: */*
-    User-Agent: NBCSports/1030 CFNetwork/711.3.18 Darwin/14.0.0
-    Accept-Language: en-us
-    Accept-Encoding: gzip, deflate
-    Connect
-    """
-    #req = urllib2.Request(ROOT_URL+'passnbc.xml')
-    #req.add_header('User-Agent',  UA_NBCSN)
-    #response = urllib2.urlopen(req)
-    #resource_id = response.read()
-    #response.close()
-    #resource_id = resource_id.replace('\n', ' ').replace('\r', '')
-    #resource_id = '<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title>nbcsports</title><item><title>NBC Sports PGA Event</title><guid>123456789</guid><media:rating scheme="urn:vchip">TV-PG</media:rating></item></channel></rss>'
-    #resource_id = '<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title>golf</title><item><title>RSM%20Classic%20-%20Rd%201</title><guid>nbcs_100188</guid><media:rating scheme="urn:v-chip"></media:rating></item></channel></rss>'
-    resource_id = '<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title>NBCOlympics</title><item><title>NBC Sports PGA Event</title><guid>123456789</guid><media:rating scheme="urn:vchip">TV-PG</media:rating></item></channel></rss>'
-
-    return resource_id
-
-
 def set_stream_quality(url):
     stream_url = {}
     stream_title = []
 
-    #Open master file a get cookie(s)
     headers = {
         "Accept": "*/*",
         "Accept-Encoding": "deflate",
@@ -170,8 +142,6 @@ def set_stream_quality(url):
 
             temp_url = url.replace(replace_url_chunk,temp_url)
             temp_url = temp_url.rstrip() + "|User-Agent=" + UA_NBCSN
-
-            #if '_alid_=' in cookies:
             temp_url = temp_url + "&Cookie=" + cookies
 
             if desc not in stream_title:
@@ -192,7 +162,6 @@ def set_stream_quality(url):
                     pass
 
     if len(stream_title) > 0:
-        ret = -1
         stream_title.sort(key=natural_sort_key, reverse=True)
         if str(PLAY_BEST) == 'true':
             ret = 0
@@ -207,7 +176,7 @@ def set_stream_quality(url):
     else:
         msg = "No playable streams found."
         dialog = xbmcgui.Dialog()
-        ok = dialog.ok('Streams Not Found', msg)
+        dialog.ok('Streams Not Found', msg)
 
     return url
 
