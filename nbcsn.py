@@ -178,14 +178,14 @@ def build_video_link(item):
 
 def sign_stream(stream_url, stream_name, stream_icon, requestor_id, channel):
     SERVICE_VARS['requestor_id'] = requestor_id
-    resource_id = '<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title>'+channel+'</title></channel></rss>'
+    resource_id = "<rss version='2.0'><channel><title>"+channel+"</title></channel></rss>"
     # resource_id = '<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title>'+channel+'</title><item><title>NBC Sports PGA Event</title><guid>123456789</guid><media:rating scheme="urn:vchip">TV-PG</media:rating></item></channel></rss>'
     SERVICE_VARS['resource_id'] = urllib.quote(resource_id)
     adobe = ADOBE(SERVICE_VARS)
-    if adobe.checkAuthN():
+    if adobe.check_authn():
         if adobe.authorize():
             # resource_id = get_resource_id()
-            media_token = adobe.mediaToken()
+            media_token = adobe.media_token()
             stream_url = tv_sign(media_token, resource_id, stream_url)
             stream_url = set_stream_quality(stream_url)
             listitem = xbmcgui.ListItem(path=stream_url)
@@ -197,7 +197,7 @@ def sign_stream(stream_url, stream_name, stream_icon, requestor_id, channel):
         dialog = xbmcgui.Dialog()
         answer = dialog.yesno("Authorize",msg)
         if answer:
-            adobe.registerDevice()
+            adobe.register_device()
             sign_stream(stream_url, stream_name, stream_icon, requestor_id, channel)
         else:
             sys.exit()
@@ -226,7 +226,7 @@ def tv_sign(media_token, resource_id, stream_url):
 
 def logout():
     adobe = ADOBE(SERVICE_VARS)
-    adobe.deauthorizeDevice()
+    adobe.logout()
 
 
 params=get_params()
